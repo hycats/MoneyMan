@@ -1,0 +1,35 @@
+td.w2ui-head {
+    text-align: center !important;
+}
+
+.w2field.dt {
+    width: 70px;
+}
+
+.fontawesome {
+    font-family: FontAwesome;
+}
+
+/*
+.fontawesome.bt {
+    padding: 6;
+    border:7;
+    margin:0;
+}
+*/
+
+.tab_panel {
+    width: 100%;
+    height: 100%;
+}
+.tab_panel.show {
+    display: block;
+}
+.tab_panel.hide {
+    display: none;
+}
+html, body {
+    height:100%;
+    margin-top:0;
+    margin-bottom:0;
+}
