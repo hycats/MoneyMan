@@ -55,7 +55,7 @@ spa.paneltop = (function () {
     },
         stateMap = {
             $container: null,
-            curdate: new Date()
+            curdate: null
         },
         jqueryMap = {},
         setJqueryMap, refresh, initModule;
@@ -71,6 +71,8 @@ spa.paneltop = (function () {
 
     initModule = function ($container) {
         stateMap.$container = $container;
+        stateMap.curdate = new Date();
+        stateMap.curdate.setHours(0, 0, 0, 0);
         $container.html(configMap.main_html);
         setJqueryMap();
 

@@ -7,16 +7,10 @@ spa.shell = (function () {
         main_html: String()
         + '<div id="tabs"></div>'
         + '<div id="tab-panel" style="width:100%; height:calc(100% - 80px);">'
-        + '<div id="tab-panel-top" class="tab_panel show"></div>'
-        + '<div id="tab-panel-kakeibo" class="tab_panel hide">'
-        + '<div id="kakeibo_tbl"></div>'
-        + '</div>'
-        + '<div id="tab-panel-graph" class="tab_panel hide">'
-        + '<div id="chartdiv" style="width:100%; height:100%;"></div>'
-        + '</div>'
-        + '<div id="tab-panel-setting" class="tab_panel hide">'
-        + '設定'
-        + '</div>'
+            + '<div id="tab-panel-top" class="tab_panel show"></div>'
+            + '<div id="tab-panel-kakeibo" class="tab_panel hide"></div>'
+            + '<div id="tab-panel-graph" class="tab_panel hide"></div>'
+            + '<div id="tab-panel-setting" class="tab_panel hide"></div>'
         + '</div>',
 
         settable_map: {
@@ -55,6 +49,9 @@ spa.shell = (function () {
         jqueryMap.$container.find('#tabs').w2tabs(configMap.settable_map.tabs);
 
         spa.paneltop.initModule(jqueryMap.$container.find('#tab-panel-top'));
+        spa.panelkakeibo.initModule(jqueryMap.$container.find('#tad-panel-kakeibo'));
+        spa.panelgraph.initModule(jqueryMap.$container.find('#tab-panel-graph'));
+        spa.panelsetting.initModule(jqueryMap.$container.find('#tab-panel-setting'));
     };
 
     return { initModule: initModule };
