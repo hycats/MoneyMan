@@ -2,7 +2,7 @@
 
 spa.shell = (function () {
     'use strict';
-    
+
     var configMap = {
         main_html: String()
         + '<div id="tabs"></div>'
@@ -33,7 +33,7 @@ spa.shell = (function () {
                     //console.log(`ok ${event.target}`);
                     $('#tab-panel .tab_panel').hide();
                     $(event.tab.my_tab_panel).show();
-                    spa.paneltop.refresh();
+                    if (event.tab.my_tab_panel == '#tab-panel-top') { spa.paneltop.refresh(); }
                 }
             }
         }
@@ -52,7 +52,7 @@ spa.shell = (function () {
         $container.html(configMap.main_html);
         setJqueryMap();
 
-        $('#tabs').w2tabs(configMap.settable_map.tabs);
+        jqueryMap.$container.find('#tabs').w2tabs(configMap.settable_map.tabs);
 
         spa.paneltop.initModule(jqueryMap.$container.find('#tab-panel-top'));
     };
