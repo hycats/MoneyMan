@@ -15,30 +15,16 @@
     <script src="bower_components/amcharts3/amcharts/amcharts.js"></script>
     <script src="bower_components/amcharts3/amcharts/serial.js"></script>
     <script src="js/spa.js"></script>
+    <script src="js/spa.shell.js"></script>
+    <script src="js/spa.paneltop.js"></script>
     <link rel="stylesheet" type="text/css" href="css/spa.css" />
+    <script>
+        jQuery(function ($) { spa.initModule($('#spa')); });
+    </script>
 </head>
 
 <body>
-    <div id="tabs"></div>
-    <div id="tab-panel" style="width:100%; height:calc(100% - 80px);">
-        <div id="tab-panel-top" class="tab_panel show">
-            <div>
-                <button class="fontawesome bt" type="my-date" id="btn-l"><i class="fa fa-chevron-left"></i></button>
-                <input id="top_date" type="my-date" class="w2field dt" required>
-                <button class="fontawesome bt" type="my-date" id="btn-r"><i class="fa fa-chevron-right"></i></button>
-            </div>
-            <div id="top_layout" style="width:100%; height:100%;"></div>
-        </div>
-        <div id="tab-panel-kakeibo" class="tab_panel hide">
-            <div id="kakeibo_tbl"></div>
-        </div>
-        <div id="tab-panel-graph" class="tab_panel hide">
-            <div id="chartdiv" style="width:100%; height:100%;"></div>
-        </div>
-        <div id="tab-panel-setting" class="tab_panel hide">
-            設定
-        </div>
-    </div>
+    <div id="spa"></div>
 </body>
 
 </html>

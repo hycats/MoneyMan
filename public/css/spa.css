@@ -28,6 +28,10 @@ td.w2ui-head {
 .tab_panel.hide {
     display: none;
 }
+#spa {
+    width: 100%;
+    height: 100%;
+}
 html, body {
     height:100%;
     margin-top:0;

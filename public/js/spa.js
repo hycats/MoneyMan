@@ -1,6 +1,15 @@
+// spa.js
+
+var spa = (function () {
+    var initModule = function ($container) {
+        spa.shell.initModule( $container );
+    }
+
+    return { initModule: initModule };
+}());
 
 jQuery(function ($) {
-
+/*
     var scope = {};
     scope.curdate = new Date();
     scope.curdate.setHours(0, 0, 0, 0);
@@ -18,7 +27,7 @@ jQuery(function ($) {
             onClick: function (event) {
                 //console.log(`ok ${event.target}`);
                 $('#tab-panel .tab_panel').hide();
-                $('#tab-panel '+event.tab.my_tab_panel).show();
+                $('#tab-panel' + event.tab.my_tab_panel).show();
                 w2ui.layout_top.refresh();
             }
         },
@@ -82,12 +91,12 @@ jQuery(function ($) {
     // Top グリッド
     $('#top_layout').w2layout(scope.config.layout_top);
     w2ui.layout_top.content('main', $().w2grid(scope.config.grid_top));
-    
+
     // 家計簿グリッド
     $('#kakeibo_tbl').handsontable({
-        data: [  [ '1','2','3', '4'],[ '1','2','3', '4'],[]],
-        colHeaders: [ 'D1', 'D2', 'D3', 'D4'],
-        rowHeaders: [ '食費', '酒・たばこ', '生活用品'],
+        data: [['1', '2', '3', '4'], ['1', '2', '3', '4'], []],
+        colHeaders: ['D1', 'D2', 'D3', 'D4'],
+        rowHeaders: ['食費', '酒・たばこ', '生活用品'],
         rowHeaderWidth: 150,
         readOnly: true
     });
@@ -116,4 +125,5 @@ jQuery(function ($) {
         angle: 30,
         depth3D: 15
     });
+    */
 });
