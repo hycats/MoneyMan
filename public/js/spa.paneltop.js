@@ -62,7 +62,12 @@ spa.paneltop = (function () {
 
     setJqueryMap = function () {
         var $container = stateMap.$container;
-        jqueryMap = { $container: $container };
+        jqueryMap = {
+            $container: $container,
+            $datepicker: $container.find('#top_date'),
+            $datebuttons: $container.find('button[type="my-date"]'),
+            $layout: $container.find('#top_layout')
+        };
     };
 
     refresh = function () {
@@ -78,9 +83,8 @@ spa.paneltop = (function () {
 
         // 日付入力
         (function () {
-            var input_date = jqueryMap.$container.find('#top_date');
             var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
-            input_date.w2field('date', { format: 'yyyy/mm/dd' }).val(now).change(function (e) {
+            jqueryMap.$datepicker.w2field('date', { format: 'yyyy/mm/dd' }).val(now).change(function (e) {
                 var curdate = stateMap.curdate;
                 curdate.setFullYear($(this).val().substr(0, 4));
                 curdate.setMonth($(this).val().substr(5, 2) - 1, $(this).val().substr(8, 2));
@@ -89,14 +93,14 @@ spa.paneltop = (function () {
         }());
 
         // 日付変更ボタン
-        jqueryMap.$container.find('button[type="my-date"]').click(function () {
-            var offset = ($(this).attr('id') === 'btn-l') ? -1 : 1;
+        jqueryMap.$datebuttons.click(function (event) {
+            var offset = (event.target.id === 'btn-l') ? -1 : 1;
             stateMap.curdate.setDate(stateMap.curdate.getDate() + offset);
             var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
-            $('#top_date').val(now);
+            jqueryMap.$datepicker.val(now);
         });
         // Top グリッド
-        jqueryMap.$container.find('#top_layout').w2layout(configMap.settable_map.layout_top);
+        jqueryMap.$layout.w2layout(configMap.settable_map.layout_top);
         w2ui.layout_top.content('main', $().w2grid(configMap.settable_map.grid_top));
     };
 
