@@ -10,7 +10,24 @@ spa.paneltop = (function () {
         + '<input id="top_date" type="my-date" class="w2field dt" required>'
         + '<button class="fontawesome bt" type="my-date" id="btn-r"><i class="fa fa-chevron-right"></i></button>'
         + '</div>'
-        + '<div id="top_layout" style="width:100%; height:100%;"></div>',
+        + '<div id="top_layout" style="width:100%; height:100%;"></div>'
+
+        + '<div id="top_form">'
+        + '<div class="w2ui-page page-0">'
+        + '<div class="w2ui-field">'
+        + '<label class="w2ui-field lbl">日付:</label>'
+        + '<div class="w2ui-field ipt">'
+        + '<input name="top_form_date" class="w2ui-field dt">'
+        + '</div>'
+        + '</div>'
+        + '<div class="w2ui-field">'
+        + '<label class="w2ui-field lbl">費目:</label>'
+        + '<div class="w2ui-field ipt">'
+        + '<input name="top_form_expense" class="w2ui-field txt">'
+        + '</div>'
+        + '</div>'
+        + '</div>'
+        + '</div>',
 
         settable_map: {
             layout_top: {
@@ -18,7 +35,7 @@ spa.paneltop = (function () {
                 padding: 4,
                 panels: [
                     { type: 'main', content: 'main' },
-                    { type: 'right', size: '20%', content: 'right' }
+                    { type: 'right', size: '200px', content: 'right' }
                 ]
             },
             grid_top: {
@@ -26,7 +43,7 @@ spa.paneltop = (function () {
                 header: 'List of Names',
                 //multiSearch: true,
                 show: {
-                    toolbar: true,
+                    toolbar: true, 
                     footer: true,
                     toolbarReload: false,
                     toolbarColumns: false
@@ -50,6 +67,15 @@ spa.paneltop = (function () {
                     { recid: 1, sdate: "01/12/2017", fname: "Peter", lname: "Jeremia", income: 1000 },
                     { recid: 2, fname: "Bruce", lname: "Wilkerson" }
                 ]
+            },
+            form: {
+                header: '家計簿 入力',
+                name: 'form_top',
+                fields: [
+                    { field: 'top_form_date', type: 'date', options:{ format: 'yyyy/mm/dd'}},
+                    { field: 'top_form_expense', type: 'text' }
+                ],
+                focus: 1
             }
         }
     },
@@ -102,6 +128,8 @@ spa.paneltop = (function () {
         // Top グリッド
         jqueryMap.$layout.w2layout(configMap.settable_map.layout_top);
         w2ui.layout_top.content('main', $().w2grid(configMap.settable_map.grid_top));
+        // Top form
+        w2ui.layout_top.content('right', $('#top_form').w2form(configMap.settable_map.form));
     };
 
     return { initModule: initModule, refresh: refresh };
