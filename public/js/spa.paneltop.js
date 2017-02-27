@@ -14,19 +14,37 @@ spa.paneltop = (function () {
 
         + '<div id="top_form">'
         + '<div class="w2ui-page page-0">'
+
         + '<div class="w2ui-field">'
         + '<label class="w2ui-field lbl">日付:</label>'
-        + '<div class="w2ui-field ipt">'
-        + '<input name="top_form_date" class="w2ui-field dt">'
+        + '<div class="w2ui-field ipt"><input name="top_form_date" class="w2ui-field dt"></div>'
         + '</div>'
-        + '</div>'
+
         + '<div class="w2ui-field">'
         + '<label class="w2ui-field lbl">費目:</label>'
-        + '<div class="w2ui-field ipt">'
-        + '<input name="top_form_expense" class="w2ui-field txt">'
+        + '<div class="w2ui-field ipt"><input name="top_form_expense" class="w2ui-field txt"></div>'
         + '</div>'
+
+        + '<div class="w2ui-field">'
+        + '<label class="w2ui-field lbl">内訳:</label>'
+        + '<div class="w2ui-field ipt"><input name="top_form_breakdown" class="w2ui-field txt"></div>'
         + '</div>'
+
+        + '<div class="w2ui-field">'
+        + '<label class="w2ui-field lbl">品名:</label>'
+        + '<div class="w2ui-field ipt"><input name="top_form_product" class="w2ui-field txt"></div>'
         + '</div>'
+
+        + '<div class="w2ui-field">'
+        + '<label class="w2ui-field lbl">金額:</label>'
+        + '<div class="w2ui-field ipt"><input name="top_form_money" class="w2ui-field txt"></div>'
+        + '</div>'
+
+        + '</div>'
+        + '<div class="w2ui-buttons">'
+        + '<button class="w2ui-btn" name="save">入力</button>'
+        + '</div>'
+
         + '</div>',
 
         settable_map: {
@@ -43,7 +61,7 @@ spa.paneltop = (function () {
                 header: 'List of Names',
                 //multiSearch: true,
                 show: {
-                    toolbar: true, 
+                    toolbar: true,
                     footer: true,
                     toolbarReload: false,
                     toolbarColumns: false
@@ -72,10 +90,18 @@ spa.paneltop = (function () {
                 header: '家計簿 入力',
                 name: 'form_top',
                 fields: [
-                    { field: 'top_form_date', type: 'date', options:{ format: 'yyyy/mm/dd'}},
-                    { field: 'top_form_expense', type: 'text' }
+                    { field: 'top_form_date', type: 'date', options: { format: 'yyyy/mm/dd' } },
+                    { field: 'top_form_expense', type: 'text' },
+                    { field: 'top_form_breakdown', type: 'text' },
+                    { field: 'top_form_product', type: 'text' },
+                    { field: 'top_form_money', type: 'int', required: true },
                 ],
-                focus: 1
+                focus: 1,
+                actions: {
+                    save: function () {
+                        this.save();
+                    }
+                }
             }
         }
     },
