@@ -130,6 +130,7 @@ spa.paneltop = (function () {
         w2ui.layout_top.content('main', $().w2grid(configMap.settable_map.grid_top));
         // Top form
         w2ui.layout_top.content('right', $('#top_form').w2form(configMap.settable_map.form));
+        $('#top_form').hide();
     };
 
     return { initModule: initModule, refresh: refresh };
