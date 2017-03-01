@@ -110,7 +110,7 @@ spa.paneltop = (function () {
             curdate: null
         },
         jqueryMap = {},
-        setJqueryMap, refresh, initModule;
+        setJqueryMap, updateDate, refresh, initModule;
 
     setJqueryMap = function () {
         var $container = stateMap.$container;
@@ -120,6 +120,13 @@ spa.paneltop = (function () {
             $datebuttons: $container.find('button[type="my-date"]'),
             $layout: $container.find('#top_layout')
         };
+    };
+
+    updateDate = function (date_string) {
+        var curdate = stateMap.curdate;
+        curdate.setFullYear(date_string.substr(0, 4));
+        curdate.setMonth(date_string.substr(5, 2) - 1, date_string.substr(8, 2));
+        curdate.setHours(0, 0, 0, 0);
     };
 
     refresh = function () {
@@ -133,21 +140,10 @@ spa.paneltop = (function () {
         $container.html(configMap.main_html);
         setJqueryMap();
 
-        // 日付入力
-        (function () {
-            var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
-            jqueryMap.$datepicker.w2field('date', { format: 'yyyy/mm/dd' }).val(now).change(function (e) {
-                var curdate = stateMap.curdate;
-                curdate.setFullYear($(this).val().substr(0, 4));
-                curdate.setMonth($(this).val().substr(5, 2) - 1, $(this).val().substr(8, 2));
-                curdate.setHours(0, 0, 0, 0);
-            });
-        }());
-
         // 日付変更ボタン
         jqueryMap.$datebuttons.click(function (event) {
             var offset = (event.target.id === 'btn-l') ? -1 : 1;
-            stateMap.curdate.setDate(stateMap.curdate.getDate() + offset);
+            stateMap.curdate.setMonth(stateMap.curdate.getMonth() + offset);
             var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
             jqueryMap.$datepicker.val(now);
         });
@@ -157,6 +153,15 @@ spa.paneltop = (function () {
         // Top form
         w2ui.layout_top.content('right', $('#top_form').w2form(configMap.settable_map.form));
         $('#top_form').hide();
+
+        // 日付入力
+        (function () {
+            var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
+            jqueryMap.$datepicker.w2field('date', { format: 'yyyy/mm/dd' }).val(now).change(function (e) {
+                updateDate($(this).val());
+            });
+        }());
+
     };
 
     return { initModule: initModule, refresh: refresh };
