@@ -29,6 +29,7 @@ td.w2ui-head {
 }
 .w2ui-field.txt {
     width: 130px;
+    text-align: right;
 }
 .tab_panel {
     width: 100%;

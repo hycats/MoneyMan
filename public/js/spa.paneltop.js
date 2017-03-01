@@ -10,42 +10,7 @@ spa.paneltop = (function () {
         + '<input id="top_date" type="my-date" class="w2field dt" required>'
         + '<button class="fontawesome bt" type="my-date" id="btn-r"><i class="fa fa-chevron-right"></i></button>'
         + '</div>'
-        + '<div id="top_layout" style="width:100%; height:100%;"></div>'
-
-        + '<div id="top_form">'
-        + '<div class="w2ui-page page-0">'
-
-        + '<div class="w2ui-field">'
-        + '<label class="w2ui-field lbl">日付:</label>'
-        + '<div class="w2ui-field ipt"><input name="top_form_date" class="w2ui-field dt"></div>'
-        + '</div>'
-
-        + '<div class="w2ui-field">'
-        + '<label class="w2ui-field lbl">費目:</label>'
-        + '<div class="w2ui-field ipt"><input name="top_form_expense" class="w2ui-field txt"></div>'
-        + '</div>'
-
-        + '<div class="w2ui-field">'
-        + '<label class="w2ui-field lbl">内訳:</label>'
-        + '<div class="w2ui-field ipt"><input name="top_form_breakdown" class="w2ui-field txt"></div>'
-        + '</div>'
-
-        + '<div class="w2ui-field">'
-        + '<label class="w2ui-field lbl">品名:</label>'
-        + '<div class="w2ui-field ipt"><input name="top_form_product" class="w2ui-field txt"></div>'
-        + '</div>'
-
-        + '<div class="w2ui-field">'
-        + '<label class="w2ui-field lbl">金額:</label>'
-        + '<div class="w2ui-field ipt"><input name="top_form_money" class="w2ui-field txt"></div>'
-        + '</div>'
-
-        + '</div>'
-        + '<div class="w2ui-buttons">'
-        + '<button class="w2ui-btn" name="save">入力</button>'
-        + '</div>'
-
-        + '</div>',
+        + '<div id="top_layout" style="width:100%; height:100%;"></div>',
 
         settable_map: {
             layout_top: {
@@ -89,6 +54,42 @@ spa.paneltop = (function () {
             form: {
                 header: '家計簿 入力',
                 name: 'form_top',
+                formHTML: '<div id="top_form">'
+                + '<div class="w2ui-page page-0">'
+
+                + '<div class="w2ui-field">'
+                + '<label class="w2ui-field lbl">日付:</label>'
+                + '<div class="w2ui-field ipt"><input id="top_form_date" name="top_form_date" class="w2ui-field dt"></div>'
+                + '</div>'
+
+                + '<div class="w2ui-field">'
+                + '<label class="w2ui-field lbl">費目:</label>'
+                + '<div class="w2ui-field ipt"><input name="top_form_expense" class="w2ui-field txt"></div>'
+                + '</div>'
+
+                + '<div class="w2ui-field">'
+                + '<label class="w2ui-field lbl">内訳:</label>'
+                + '<div class="w2ui-field ipt"><input name="top_form_breakdown" class="w2ui-field txt"></div>'
+                + '</div>'
+
+                + '<div class="w2ui-field">'
+                + '<label class="w2ui-field lbl">品名:</label>'
+                + '<div class="w2ui-field ipt"><input name="top_form_product" class="w2ui-field txt"></div>'
+                + '</div>'
+
+                + '<div class="w2ui-field">'
+                + '<label class="w2ui-field lbl">金額:</label>'
+                + '<div class="w2ui-field ipt"><input name="top_form_money" class="w2ui-field txt"></div>'
+                + '</div>'
+
+                + '</div>'
+                + '<div class="w2ui-buttons">'
+                + '<button class="w2ui-btn" name="save">入力</button>'
+                + '</div>'
+
+                + '</div>'
+                + '</div>',
+
                 fields: [
                     { field: 'top_form_date', type: 'date', options: { format: 'yyyy/mm/dd' } },
                     { field: 'top_form_expense', type: 'text' },
@@ -96,10 +97,15 @@ spa.paneltop = (function () {
                     { field: 'top_form_product', type: 'text' },
                     { field: 'top_form_money', type: 'int', required: true },
                 ],
-                focus: 1,
+                focus: 4,
                 actions: {
                     save: function () {
                         this.save();
+                    }
+                },
+                onChange: function(event) {
+                    if (event.target == 'top_form_date' && event.value_new != event.value_previous) {
+                        updateDate(event.value_new);
                     }
                 }
             }
@@ -152,7 +158,7 @@ spa.paneltop = (function () {
         w2ui.layout_top.content('main', $().w2grid(configMap.settable_map.grid_top));
         // Top form
         w2ui.layout_top.content('right', $('#top_form').w2form(configMap.settable_map.form));
-        $('#top_form').hide();
+        //$('#top_form').hide();
 
         // 日付入力
         (function () {
@@ -160,6 +166,7 @@ spa.paneltop = (function () {
             jqueryMap.$datepicker.w2field('date', { format: 'yyyy/mm/dd' }).val(now).change(function (e) {
                 updateDate($(this).val());
             });
+            w2ui.form_top.record['top_form_date'] = now;
         }());
 
     };
