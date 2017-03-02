@@ -9,6 +9,7 @@ spa.paneltop = (function () {
         + '<button class="fontawesome bt" type="my-date" id="btn-l"><i class="fa fa-chevron-left"></i></button>'
         + '<input id="top_date" type="my-date" class="w2field dt" required>'
         + '<button class="fontawesome bt" type="my-date" id="btn-r"><i class="fa fa-chevron-right"></i></button>'
+        + `<span class="today-label"> 今日:${(new Date()).toLocaleDateString('ja-JP',{ year: "numeric", month: "2-digit", day: "2-digit" })}</span>`
         + '</div>'
         + '<div id="top_layout" style="width:100%; height:100%;"></div>',
 

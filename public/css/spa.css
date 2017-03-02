@@ -10,13 +10,18 @@ td.w2ui-head {
     font-family: FontAwesome;
 }
 
-/*
-.fontawesome.bt {
-    padding: 6;
-    border:7;
-    margin:0;
+.today-label {
+    font-size: 60%;
+    text-shadow: 1px 1px 4px #c0c0c0;
 }
-*/
+
+.fontawesome.bt {
+    background-color: #e8e8f0;
+    border: outset thin;
+    border-radius: 0.5em;
+    margin: 3px;
+}
+
 .w2ui-field.lbl {
     width: 40px;
     text-align:left;
