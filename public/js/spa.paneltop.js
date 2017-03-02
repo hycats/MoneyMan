@@ -103,7 +103,7 @@ spa.paneltop = (function () {
                         this.save();
                     }
                 },
-                onChange: function(event) {
+                onChange: function (event) {
                     if (event.target == 'top_form_date' && event.value_new != event.value_previous) {
                         updateDate(event.value_new);
                     }
@@ -116,7 +116,7 @@ spa.paneltop = (function () {
             curdate: null
         },
         jqueryMap = {},
-        setJqueryMap, updateDate, refresh, initModule;
+        setJqueryMap, updateDate, applyCurdate, refresh, initModule;
 
     setJqueryMap = function () {
         var $container = stateMap.$container;
@@ -129,10 +129,20 @@ spa.paneltop = (function () {
     };
 
     updateDate = function (date_string) {
+        /* curdate を日付文字列で設定する */
         var curdate = stateMap.curdate;
         curdate.setFullYear(date_string.substr(0, 4));
         curdate.setMonth(date_string.substr(5, 2) - 1, date_string.substr(8, 2));
         curdate.setHours(0, 0, 0, 0);
+        applyCurdate();
+    };
+
+    applyCurdate = function (is_init) {
+        /* curdate を変更したら view に反映するために呼ばれる */
+        var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
+        jqueryMap.$datepicker.val(now);
+        w2ui.form_top.record['top_form_date'] = now;
+        if (!is_init) { w2ui.form_top.refresh('top_form_date'); }
     };
 
     refresh = function () {
@@ -150,8 +160,7 @@ spa.paneltop = (function () {
         jqueryMap.$datebuttons.click(function (event) {
             var offset = (event.target.id === 'btn-l') ? -1 : 1;
             stateMap.curdate.setMonth(stateMap.curdate.getMonth() + offset);
-            var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
-            jqueryMap.$datepicker.val(now);
+            applyCurdate();
         });
         // Top グリッド
         jqueryMap.$layout.w2layout(configMap.settable_map.layout_top);
@@ -162,11 +171,11 @@ spa.paneltop = (function () {
 
         // 日付入力
         (function () {
-            var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
-            jqueryMap.$datepicker.w2field('date', { format: 'yyyy/mm/dd' }).val(now).change(function (e) {
+            //var now = stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" });
+            jqueryMap.$datepicker.w2field('date', { format: 'yyyy/mm/dd' }).change(function (e) {
                 updateDate($(this).val());
             });
-            w2ui.form_top.record['top_form_date'] = now;
+            applyCurdate(true);
         }());
 
     };
