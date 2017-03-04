@@ -46,10 +46,6 @@ spa.paneltop = (function () {
                     { field: 'outgo', caption: '支出', render: 'int', editable: { type: 'int' }, size: '10%' },
                     { field: 'balance', caption: '残高', render: 'int', editable: { type: 'int' }, size: '10%' },
                     { field: 'remark', caption: '備考', size: '30%' },
-                ],
-                records: [
-                    { recid: 1, sdate: "01/12/2017", expense: "Peter", breakdown: "Jeremia", income: 1000 },
-                    { recid: 2, expense: "Bruce", breakdown: "Wilkerson" }
                 ]
             },
             form: {
