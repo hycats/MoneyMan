@@ -38,18 +38,18 @@ spa.paneltop = (function () {
                 ],
                 columns: [
                     { field: 'sdate', caption: '日付', size: '80px', render: 'date:yyyy/mm/dd', editable: { type: 'date' } },
-                    { field: 'fname', caption: '費目', size: '10%' },
-                    { field: 'lname', caption: '内訳', size: '10%' },
+                    { field: 'expense', caption: '費目', size: '10%' },
+                    { field: 'breakdown', caption: '内訳', size: '10%' },
                     { field: 'product', caption: '品名', size: '10%' },
                     { field: 'check', caption: '済', editable: { type: 'checkbox' }, size: '30px' },
                     { field: 'income', caption: '収入', render: 'int', editable: { type: 'int' }, size: '10%' },
                     { field: 'outgo', caption: '支出', render: 'int', editable: { type: 'int' }, size: '10%' },
                     { field: 'balance', caption: '残高', render: 'int', editable: { type: 'int' }, size: '10%' },
-                    { field: 'email', caption: '備考', size: '30%' },
+                    { field: 'remark', caption: '備考', size: '30%' },
                 ],
                 records: [
-                    { recid: 1, sdate: "01/12/2017", fname: "Peter", lname: "Jeremia", income: 1000 },
-                    { recid: 2, fname: "Bruce", lname: "Wilkerson" }
+                    { recid: 1, sdate: "01/12/2017", expense: "Peter", breakdown: "Jeremia", income: 1000 },
+                    { recid: 2, expense: "Bruce", breakdown: "Wilkerson" }
                 ]
             },
             form: {
