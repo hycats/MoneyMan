@@ -9,7 +9,7 @@ spa.paneltop = (function () {
         + '<button class="fontawesome bt" type="my-date" id="btn-l"><i class="fa fa-chevron-left"></i></button>'
         + '<input id="top_date" type="my-date" class="w2field dt" required>'
         + '<button class="fontawesome bt" type="my-date" id="btn-r"><i class="fa fa-chevron-right"></i></button>'
-        + `<span class="today-label"> 今日:${(new Date()).toLocaleDateString('ja-JP',{ year: "numeric", month: "2-digit", day: "2-digit" })}</span>`
+        + `<span class="today-label"> 今日:${(new Date()).toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" })}</span>`
         + ' <span class="account-label"><label>口座: </label><input id="top_accounts" type="list" class="w2field ac"></span>'
         + '</div>'
         + '<div id="top_layout" style="width:100%; height:100%;"></div>',
@@ -178,7 +178,12 @@ spa.paneltop = (function () {
         }());
 
         // 口座選択
-        jqueryMap.$accountsel.w2field('list');
+        (function () {
+            var item = { id: 0, text: "現金" };
+            jqueryMap.$accountsel.w2field('list', { items: [item, { id: 2, text: "新生" }], selected: item }).change(function (e) {
+                console.log($(this).data('selected'));
+            });
+        }());
     };
 
     return { initModule: initModule, refresh: refresh };
