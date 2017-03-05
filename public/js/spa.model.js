@@ -34,10 +34,32 @@ spa.model = (function () {
         ]
     },
         stateMap = {
+            account_id: 0,
+            account_db: TAFFY([{
+                "id": 0, name: "現金", "type": -1
+            }]),
             ledger_db: TAFFY()
         },
         isFakeData = true,
-        entryProto, makeEntry, ledger, initModule;
+        accountProto, makeAccount, entryProto, makeEntry, accounts, ledger, initModule;
+
+    accountProto = {
+        get_is_current: function() {
+            return this.id === stateMap.account_id;
+        }
+    };
+
+    makeAccount = function (account_map) {
+        var acc;
+
+        acc = Object.create(accountProto);
+        acc.id = account_map.id;
+        acc.name = account_map.name;
+        acc.type = account_map.type;
+
+        stateMap.account_db.insert(acc);
+        return acc;
+    };
 
     entryProto = {
 
@@ -61,14 +83,24 @@ spa.model = (function () {
         return entry;
     };
 
+    accounts = {
+        get_db: function () { return stateMap.account_db; }
+    };
+
     ledger = {
         get_db: function () { return stateMap.ledger_db; }
     };
 
     initModule = function () {
-        var ledger_list, entry_map;
+        var account_list, account_map, ledger_list, entry_map;
 
         if (isFakeData) {
+            account_list = spa.fake.getAccountList();
+            for (var i = 0, l = account_list.length; i < l; ++i) {
+                account_map = account_list[i];
+                makeAccount(account_map);
+            }
+
             ledger_list = spa.fake.getLedgerList();
             for (var i = 0, l = ledger.length; i < l; i++) {
                 entry_map = ledger_list[i];
@@ -79,6 +111,7 @@ spa.model = (function () {
 
     return {
         initModule: initModule,
+        accounts: accounts,
         ledger: ledger
     };
 }());
