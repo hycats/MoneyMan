@@ -5,6 +5,10 @@ td.w2ui-head {
 .w2field.dt {
     width: 70px;
 }
+.w2field.ac {
+    width: 100px;
+    height: 18px;
+}
 
 .fontawesome {
     font-family: FontAwesome;
@@ -12,9 +16,11 @@ td.w2ui-head {
 
 .today-label {
     font-size: 60%;
-    text-shadow: 1px 1px 4px #c0c0c0;
+    text-shadow: 1px 1px 4px #b0b0b0;
 }
-
+.account-label {
+    font-size: 60%;    
+}
 .fontawesome.bt {
     background-color: #e8e8f0;
     border: outset thin;
