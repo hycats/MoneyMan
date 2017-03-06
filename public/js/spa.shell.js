@@ -48,6 +48,7 @@ spa.shell = (function () {
 
         jqueryMap.$container.find('#tabs').w2tabs(configMap.settable_map.tabs);
 
+        spa.paneltop.configModule({});
         spa.paneltop.initModule(jqueryMap.$container.find('#tab-panel-top'));
         spa.panelkakeibo.initModule(jqueryMap.$container.find('#tab-panel-kakeibo'));
         spa.panelgraph.initModule(jqueryMap.$container.find('#tab-panel-graph'));
