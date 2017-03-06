@@ -14,7 +14,10 @@ spa.paneltop = (function () {
         + '</div>'
         + '<div id="top_layout" style="width:100%; height:100%;"></div>',
 
-        settable_map: {},
+        settable_map: {
+            accounts_model: true
+        },
+        accounts_model: null,
 
         layout_top: {
             name: 'layout_top',
