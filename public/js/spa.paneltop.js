@@ -115,10 +115,13 @@ spa.paneltop = (function () {
 
         stateMap = {
             $container: null,
-            curdate: null
+            curdate: null,
+            curacc_id: -1  /* 選択中の口座ID */
         },
         jqueryMap = {},
-        setJqueryMap, updateDate, applyCurdate, refresh, configModule, initModule;
+        setJqueryMap, updateDate, applyCurdate, refresh,
+        onAccountsChange,
+        configModule, initModule;
 
     setJqueryMap = function () {
         var $container = stateMap.$container;
@@ -150,6 +153,21 @@ spa.paneltop = (function () {
 
     refresh = function () {
         w2ui.layout_top.refresh();
+    };
+
+    /* 口座リストが変化した場合に呼ばれるべきハンドラ */
+    onAccountsChange = function () {
+        // 口座リストの取得
+        var items = [];
+        var accounts_db = configMap.accounts_model.get_db();
+        accounts_db().each(function (acc, idx) {
+            items.push({ id: acc.id, text: acc.name });
+        });
+        // DropList に口座リストを設定
+        jqueryMap.$accountsel.data('w2field').options.items = items;
+        // 選択中の口座を先頭の'現金'に設定
+        stateMap.curacc_id = items[0].id;
+        jqueryMap.$accountsel.data('selected', items[0]).data('w2field').refresh();
     };
 
     configModule = function (input_map) {
@@ -192,11 +210,14 @@ spa.paneltop = (function () {
 
         // 口座選択
         (function () {
-            var item = { id: 0, text: "現金" };
-            jqueryMap.$accountsel.w2field('list', { items: [item, { id: 2, text: "新生" }], selected: item }).change(function (e) {
-                console.log($(this).data('selected'));
+            jqueryMap.$accountsel.w2field('list').change(function (e) {
+                stateMap.curacc_id = $(this).data('selected').id;
             });
+            onAccountsChange();
         }());
+
+        // イベント登録
+        $.gevent.subscribe( $container, 'spa-accountschange', onAccountsChange );
     };
 
     return {
