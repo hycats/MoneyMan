@@ -94,12 +94,12 @@ spa.paneltop = (function () {
 
             fields: [
                 { field: 'top_form_date', type: 'date', options: { format: 'yyyy/mm/dd' } },
-                { field: 'top_form_expense', type: 'text' },
-                { field: 'top_form_breakdown', type: 'text' },
-                { field: 'top_form_product', type: 'text' },
+                { field: 'top_form_expense', type: 'list' },
+                { field: 'top_form_breakdown', type: 'list' },
+                { field: 'top_form_product', type: 'list' },
                 { field: 'top_form_money', type: 'int', required: true },
             ],
-            focus: 4,
+            focus: 7, // 1+2+2+2 ?
             actions: {
                 save: function () {
                     this.save();
