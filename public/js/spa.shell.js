@@ -49,7 +49,8 @@ spa.shell = (function () {
         jqueryMap.$container.find('#tabs').w2tabs(configMap.settable_map.tabs);
 
         spa.paneltop.configModule({
-            accounts_model: spa.model.accounts
+            accounts_model: spa.model.accounts,
+            expenseset_model: spa.model.expenseset
         });
         spa.paneltop.initModule(jqueryMap.$container.find('#tab-panel-top'));
         spa.panelkakeibo.initModule(jqueryMap.$container.find('#tab-panel-kakeibo'));

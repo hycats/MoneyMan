@@ -15,9 +15,11 @@ spa.paneltop = (function () {
         + '<div id="top_layout" style="width:100%; height:100%;"></div>',
 
         settable_map: {
-            accounts_model: true
+            accounts_model: true,
+            expenseset_model: true
         },
         accounts_model: null,
+        expenseset_model: null,
 
         layout_top: {
             name: 'layout_top',
@@ -61,7 +63,7 @@ spa.paneltop = (function () {
 
             + '<div class="w2ui-field">'
             + '<label class="w2ui-field lbl">日付:</label>'
-            + '<div class="w2ui-field ipt"><input id="top_form_date" name="top_form_date" class="w2ui-field dt"></div>'
+            + '<div class="w2ui-field ipt"><input name="top_form_date" class="w2ui-field dt"></div>'
             + '</div>'
 
             + '<div class="w2ui-field">'
@@ -81,7 +83,7 @@ spa.paneltop = (function () {
 
             + '<div class="w2ui-field">'
             + '<label class="w2ui-field lbl">金額:</label>'
-            + '<div class="w2ui-field ipt"><input name="top_form_money" class="w2ui-field txt"></div>'
+            + '<div class="w2ui-field ipt"><input name="top_form_money" class="w2ui-field num"></div>'
             + '</div>'
 
             + '</div>'
@@ -216,8 +218,20 @@ spa.paneltop = (function () {
             onAccountsChange();
         }());
 
+        // 費目
+        (function () {
+            var items = [];
+            var expense_db = configMap.expenseset_model.get_expense_db();
+            expense_db().each(function (exp, idx) {
+                items.push({ id: exp.id, text: exp.id + ':' + exp.name });
+            });
+
+            w2ui.form_top.set('top_form_expense', { options: { items: items } });
+            //w2ui.form_top.refresh('top_form_expense');
+        }());
+
         // イベント登録
-        $.gevent.subscribe( $container, 'spa-accountschange', onAccountsChange );
+        $.gevent.subscribe($container, 'spa-accountschange', onAccountsChange);
     };
 
     return {
