@@ -108,8 +108,20 @@ spa.paneltop = (function () {
                 }
             },
             onChange: function (event) {
-                if (event.target == 'top_form_date' && event.value_new != event.value_previous) {
-                    updateDate(event.value_new);
+                /* omComplete で処理しないと 内訳のDropListの変更の影響で費目の変更が効かなくなるらしい。 Validate が目的ではないのでこれでいいだろ */
+                event.onComplete = function (event) {
+                    if (event.target == 'top_form_date' && event.value_new != event.value_previous) {
+                        updateDate(event.value_new);
+                        //console.log(event.value_new);
+                    }
+                    else if (event.target == 'top_form_expense' && event.value_new.id != event.value_previous.id) {
+                        stateMap.curexpense_id = event.value_new.id;
+                        applyCurExpense(false);
+                        //console.log(event.value_new.text);
+                    }
+                    else {
+                        console.log(event);
+                    }
                 }
             }
         }
@@ -118,10 +130,12 @@ spa.paneltop = (function () {
         stateMap = {
             $container: null,
             curdate: null,
-            curacc_id: -1  /* 選択中の口座ID */
+            curacc_id: -1,  /* 選択中の口座ID */
+            curexpense_id: -1,   /* 選択中の費目 */
+            curbreakdown_id: -1  /* 選択中の内訳 */
         },
         jqueryMap = {},
-        setJqueryMap, updateDate, applyCurdate, refresh,
+        setJqueryMap, updateDate, applyCurdate, applyCurExpense, refresh,
         onAccountsChange,
         configModule, initModule;
 
@@ -151,6 +165,29 @@ spa.paneltop = (function () {
         jqueryMap.$datepicker.val(now);
         w2ui.form_top.record['top_form_date'] = now;
         if (!is_init) { w2ui.form_top.refresh('top_form_date'); }
+    };
+
+    applyCurExpense = function (is_init) {
+        /* curexpense_id を変更したら form の内訳も入れ替える */
+        var items = [],
+            breakdown_db = configMap.expenseset_model.get_breakdown_db(stateMap.curexpense_id);
+        //var expense_db = configMap.expenseset_model.get_expense_db();
+        //var breakdown_db = expense_db({ id: stateMap.curexpense_id }).first().breakdown;
+        if (breakdown_db !== undefined && breakdown_db !== null) {
+            breakdown_db().each(function (exp, idx) {
+                items.push({ id: exp.id, text: ("00" + exp.id).substr(-2) + ':' + exp.name });
+            });
+            stateMap.curbreakdown_id = breakdown_db().first().id;
+            w2ui.form_top.set('top_form_breakdown', { options: { items: items } });
+            w2ui.form_top.record.top_form_breakdown = items[0];
+        }
+        else {
+            stateMap.curbreakdown_id = -1;
+            w2ui.form_top.set('top_form_breakdown', { options: { items: [] } });
+            w2ui.form_top.record.top_form_breakdown = null;
+        }
+
+        if (!is_init) { w2ui.form_top.refresh('top_form_breakdown'); }
     };
 
     refresh = function () {
@@ -223,11 +260,15 @@ spa.paneltop = (function () {
             var items = [];
             var expense_db = configMap.expenseset_model.get_expense_db();
             expense_db().each(function (exp, idx) {
-                items.push({ id: exp.id, text: exp.id + ':' + exp.name });
+                items.push({ id: exp.id, text: ("00" + exp.id).substr(-2) + ':' + exp.name });
             });
+
+            stateMap.curexpense_id = expense_db().first().id;
 
             w2ui.form_top.set('top_form_expense', { options: { items: items } });
             //w2ui.form_top.refresh('top_form_expense');
+
+            applyCurExpense(true);
         }());
 
         // イベント登録
