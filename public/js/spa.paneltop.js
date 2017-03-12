@@ -71,9 +71,14 @@ spa.paneltop = (function () {
             + '<div class="w2ui-field ipt"><input name="top_form_expense" class="w2ui-field txt"></div>'
             + '</div>'
 
-            + '<div class="w2ui-field">'
+            + '<div class="w2ui-field" id="top_form_breakdown_id">'
             + '<label class="w2ui-field lbl">内訳:</label>'
             + '<div class="w2ui-field ipt"><input name="top_form_breakdown" class="w2ui-field txt"></div>'
+            + '</div>'
+
+            + '<div class="w2ui-field" id="top_form_accounts_id">'
+            + '<label class="w2ui-field lbl">口座:</label>'
+            + '<div class="w2ui-field ipt"><input name="top_form_accounts" class="w2ui-field txt"></div>'
             + '</div>'
 
             + '<div class="w2ui-field">'
@@ -98,14 +103,14 @@ spa.paneltop = (function () {
                 { field: 'top_form_date', type: 'date', options: { format: 'yyyy/mm/dd' } },
                 { field: 'top_form_expense', type: 'list' },
                 { field: 'top_form_breakdown', type: 'list' },
+                { field: 'top_form_accounts', type: 'list' },
                 { field: 'top_form_product', type: 'list' },
                 { field: 'top_form_money', type: 'int', required: true },
             ],
-            focus: 7, // 1+2+2+2 ?
+            focus: 9, // 1+2+2+2+2 ?
             actions: {
                 save: function () {
-                    if (this.validate().length == 0 )
-                    {
+                    if (this.validate().length == 0) {
                         console.log(this.record);
                     }
                 }
@@ -218,6 +223,13 @@ spa.paneltop = (function () {
             w2ui.form_top.set('top_form_breakdown', { options: { items: [] } });
             w2ui.form_top.record.top_form_breakdown = null;
         }
+
+        //TODO
+        if (stateMap.curexpense_id == 17) {
+            $('#top_form_breakdown_id').hide();
+            $('#top_form_accounts_id').show();
+        }
+
         /* curbreakdown_id も変わったので、品名も更新する */
         applyCurBreakdown();
     };
@@ -300,6 +312,7 @@ spa.paneltop = (function () {
             w2ui.form_top.set('top_form_expense', { options: { items: items } });
             //w2ui.form_top.refresh('top_form_expense');
 
+            //$('#top_form_accounts_id').hide(); /* このタイミングだと効かないっぽいので cssで消す */
             applyCurExpense();
         }());
 

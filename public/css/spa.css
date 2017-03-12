@@ -27,7 +27,9 @@ td.w2ui-head {
     border-radius: 0.5em;
     margin: 3px;
 }
-
+#top_form_accounts_id {
+    display: none;
+}
 .w2ui-field.lbl {
     width: 40px;
     text-align:left;
