@@ -65,10 +65,15 @@ spa.model = (function () {
             ledger_db: TAFFY()
         },
         isFakeData = true,
-        makeExpenseSetDefault,
+        makeProducts, makeExpenseSetDefault,
         accountProto, makeAccount, entryProto, makeEntry,
         accounts, expenseset, ledger,
         initModule;
+
+    makeProducts = function (expense_id, breakdown_id) {
+        /* 品名dbを作る */
+        return TAFFY([{ id: 99, name: "その他" }]);
+    };
 
     makeExpenseSetDefault = function () {
         var expense_db = stateMap.expense_db,
@@ -80,10 +85,10 @@ spa.model = (function () {
             item_array = brkdwn.items;
             if (item_array !== undefined) {
                 for (var i = 0, l = item_array.length; i < l; ++i) {
-                    items.push({ id: i, name: item_array[i] });
+                    items.push({ id: i, name: item_array[i], product: makeProducts(brkdwn.id, i) });
                 }
             }
-            items.push({ id: 99, name: "その他" });
+            items.push({ id: 99, name: "その他", product: makeProducts(brkdwn.id, 99) });
             stateMap.expense_db({ id: brkdwn.id }).first().breakdown = TAFFY(items);
         });
     };
@@ -131,7 +136,8 @@ spa.model = (function () {
 
     expenseset = {
         get_expense_db: function () { return stateMap.expense_db; },
-        get_breakdown_db: function (expense_id) { return stateMap.expense_db({ id: expense_id }).first().breakdown; }
+        get_breakdown_db: function (expense_id) { return stateMap.expense_db({ id: expense_id }).first().breakdown; },
+        get_product_db: function(expense_id, breakdown_id ) { return stateMap.expense_db({id: expense_id }).first().breakdown({id: breakdown_id}).first().product; }
     }
 
     ledger = {

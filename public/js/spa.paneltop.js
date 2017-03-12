@@ -119,8 +119,15 @@ spa.paneltop = (function () {
                         applyCurExpense(false);
                         //console.log(event.value_new.text);
                     }
+                    else if (event.target == 'top_form_breakdown' && event.value_new.id != event.value_previous.id) {
+                        stateMap.curbreakdown_id = event.value_new.id;
+                        applyCurBreakdown(false);
+                    }
+                    else if (event.target == 'top_form_product' && event.value_new.id != event.value_previous.id) {
+                        stateMap.curproduct_id = event.value_new.id;
+                    }
                     else {
-                        console.log(event);
+                        //console.log(event);
                     }
                 }
             }
@@ -132,10 +139,11 @@ spa.paneltop = (function () {
             curdate: null,
             curacc_id: -1,  /* 選択中の口座ID */
             curexpense_id: -1,   /* 選択中の費目 */
-            curbreakdown_id: -1  /* 選択中の内訳 */
+            curbreakdown_id: -1,  /* 選択中の内訳 */
+            curproduct_id: -1   /* 選択中の品名 */
         },
         jqueryMap = {},
-        setJqueryMap, updateDate, applyCurdate, applyCurExpense, refresh,
+        setJqueryMap, updateDate, applyCurdate, applyCurBreakdown, applyCurExpense, refresh,
         onAccountsChange,
         configModule, initModule;
 
@@ -167,6 +175,27 @@ spa.paneltop = (function () {
         if (!is_init) { w2ui.form_top.refresh('top_form_date'); }
     };
 
+    applyCurBreakdown = function (is_init) {
+        /* curbreakdown_id を更新したら form の品名も入れ替える */
+        var items = [],
+            product_db = configMap.expenseset_model.get_product_db(stateMap.curexpense_id, stateMap.curbreakdown_id);
+        if (product_db !== undefined && product_db !== null) {
+            product_db().each(function (prd, idx) {
+                items.push({ id: prd.id, text: ("00" + prd.id).substr(-2) + ':' + prd.name });
+            });
+            stateMap.curproduct_id = product_db().first.id;
+            w2ui.form_top.set('top_form_product', { options: { items: items } });
+            w2ui.form_top.record.top_form_product = items[0];
+        }
+        else {
+            stateMap.curproduct_id = -1;
+            w2ui.form_top.set('top_form_product', { options: { items: [] } });
+            w2ui.form_top.record.top_form_product = null;
+        }
+
+        if (!is_init) { w2ui.form_top.refresh('top_form_product'); }
+    };
+
     applyCurExpense = function (is_init) {
         /* curexpense_id を変更したら form の内訳も入れ替える */
         var items = [],
@@ -188,6 +217,8 @@ spa.paneltop = (function () {
         }
 
         if (!is_init) { w2ui.form_top.refresh('top_form_breakdown'); }
+
+        applyCurBreakdown(is_init);
     };
 
     refresh = function () {
