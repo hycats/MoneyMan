@@ -119,12 +119,14 @@ spa.paneltop = (function () {
                     }
                     else if (event.target == 'top_form_expense' && event.value_new.id != event.value_previous.id) {
                         stateMap.curexpense_id = event.value_new.id;
-                        applyCurExpense(false);
+                        applyCurExpense();
                         //console.log(event.value_new.text);
+                        this.refresh();
                     }
                     else if (event.target == 'top_form_breakdown' && event.value_new.id != event.value_previous.id) {
                         stateMap.curbreakdown_id = event.value_new.id;
-                        applyCurBreakdown(false);
+                        applyCurBreakdown();
+                        this.refresh();
                     }
                     else if (event.target == 'top_form_product' && event.value_new.id != event.value_previous.id) {
                         stateMap.curproduct_id = event.value_new.id;
@@ -178,7 +180,7 @@ spa.paneltop = (function () {
         if (!is_init) { w2ui.form_top.refresh('top_form_date'); }
     };
 
-    applyCurBreakdown = function (is_init) {
+    applyCurBreakdown = function () {
         /* curbreakdown_id を更新したら form の品名も入れ替える */
         var items = [],
             product_db = configMap.expenseset_model.get_product_db(stateMap.curexpense_id, stateMap.curbreakdown_id);
@@ -195,11 +197,9 @@ spa.paneltop = (function () {
             w2ui.form_top.set('top_form_product', { options: { items: [] } });
             w2ui.form_top.record.top_form_product = null;
         }
-
-        if (!is_init) { w2ui.form_top.refresh('top_form_product'); }
     };
 
-    applyCurExpense = function (is_init) {
+    applyCurExpense = function () {
         /* curexpense_id を変更したら form の内訳も入れ替える */
         var items = [],
             breakdown_db = configMap.expenseset_model.get_breakdown_db(stateMap.curexpense_id);
@@ -218,10 +218,8 @@ spa.paneltop = (function () {
             w2ui.form_top.set('top_form_breakdown', { options: { items: [] } });
             w2ui.form_top.record.top_form_breakdown = null;
         }
-
-        if (!is_init) { w2ui.form_top.refresh('top_form_breakdown'); }
-
-        applyCurBreakdown(is_init);
+        /* curbreakdown_id も変わったので、品名も更新する */
+        applyCurBreakdown();
     };
 
     refresh = function () {
@@ -302,7 +300,7 @@ spa.paneltop = (function () {
             w2ui.form_top.set('top_form_expense', { options: { items: items } });
             //w2ui.form_top.refresh('top_form_expense');
 
-            applyCurExpense(true);
+            applyCurExpense();
         }());
 
         // イベント登録
