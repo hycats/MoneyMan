@@ -104,7 +104,10 @@ spa.paneltop = (function () {
             focus: 7, // 1+2+2+2 ?
             actions: {
                 save: function () {
-                    this.save();
+                    if (this.validate().length == 0 )
+                    {
+                        console.log(this.record);
+                    }
                 }
             },
             onChange: function (event) {
