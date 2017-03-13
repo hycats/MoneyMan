@@ -138,7 +138,7 @@ spa.model = (function () {
         get_expense_db: function () { return stateMap.expense_db; },
         get_breakdown_db: function (expense_id) { return stateMap.expense_db({ id: expense_id }).first().breakdown; },
         get_product_db: function (expense_id, breakdown_id) {
-            if (breakdown_id < 0) return null;
+            if (expense_id < 0 || breakdown_id < 0) return null;
             return stateMap.expense_db({ id: expense_id }).first().breakdown({ id: breakdown_id }).first().product;
         }
     }

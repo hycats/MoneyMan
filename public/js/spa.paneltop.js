@@ -128,7 +128,7 @@ spa.paneltop = (function () {
                         //console.log(event.value_new.text);
                         this.refresh();
                     }
-                    else if (event.target == 'top_form_breakdown' && event.value_new.id != event.value_previous.id) {
+                    else if ((event.target == 'top_form_breakdown' || event.target == 'top_form_accounts') && event.value_new.id != event.value_previous.id) {
                         stateMap.curbreakdown_id = event.value_new.id;
                         applyCurBreakdown();
                         this.refresh();
@@ -149,7 +149,7 @@ spa.paneltop = (function () {
             curdate: null,
             curacc_id: -1,  /* 選択中の口座ID */
             curexpense_id: -1,   /* 選択中の費目 */
-            curbreakdown_id: -1,  /* 選択中の内訳 */
+            curbreakdown_id: -1,  /* 選択中の内訳(form側の口座idも兼ねる) */
             curproduct_id: -1   /* 選択中の品名 */
         },
         jqueryMap = {},
@@ -241,16 +241,23 @@ spa.paneltop = (function () {
     /* 口座リストが変化した場合に呼ばれるべきハンドラ */
     onAccountsChange = function () {
         // 口座リストの取得
-        var items = [];
+        var items = [], items2 = [];
         var accounts_db = configMap.accounts_model.get_db();
         accounts_db().each(function (acc, idx) {
             items.push({ id: acc.id, text: acc.name });
+            items2.push({ id: acc.id, text: ("00" + acc.id).substr(-2) + ':' + acc.name });
         });
         // DropList に口座リストを設定
         jqueryMap.$accountsel.data('w2field').options.items = items;
         // 選択中の口座を先頭の'現金'に設定
         stateMap.curacc_id = items[0].id;
         jqueryMap.$accountsel.data('selected', items[0]).data('w2field').refresh();
+
+        // form の口座DropListも更新
+        w2ui.form_top.set('top_form_accounts', { options: { items: items2 } });
+        w2ui.form_top.record.top_form_accounts = items2[0];
+        stateMap.curbreakdown_id = items2[0].id;    /* form の口座は breakdown扱い */
+        applyCurBreakdown();
     };
 
     configModule = function (input_map) {
