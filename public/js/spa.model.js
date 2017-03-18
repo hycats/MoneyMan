@@ -4,7 +4,12 @@ spa.model = (function () {
     'use strict';
 
     var configMap = {
-        breakdowns: [
+        products: [ /* プリセットの品名 */
+            { exp_id: 20, brk_id: 0, items: ["残高調整"] },
+            { exp_id: 80, brk_id: 0, items: ["給与"] },
+            { exp_id: 81, brk_id: 0, items: ["賞与"] }
+        ],
+        breakdowns: [   /* プリセットの内訳 */
             { id: 0, items: [] },
             { id: 1, items: ["発泡酒", "ビール", "ワイン", "日本酒", "焼酎", "薬用酒", "たばこ", "ウィスキー"] },
             { id: 2, items: ["雑貨・消耗品", "電化・消耗品", "食器", "調理器具", "化粧品", "小物家具", "ペット関係"] },
@@ -28,15 +33,22 @@ spa.model = (function () {
             { id: 15, items: ["消費税", "所得税", "住民税", "固定資産税", "都市計画税"] },
             { id: 16, items: ["美容室", "美容用品"] },
             { id: 17, items: [] },
-            { id: 82, items: [] }
+            { id: 18, items: [] },
+            { id: 19, items: [] },
+            { id: 20, items: ["残高調整"] },
+            { id: 80, items: ["給与"] },
+            { id: 81, items: ["賞与"] },
+            { id: 82, items: [] },
+            { id: 83, items: [] },
+            { id: 84, items: [] }
         ]
     },
         stateMap = {
             //account_id: 0,
-            account_db: TAFFY([{
+            account_db: TAFFY([{    /* プリセットの口座は現金だけ */
                 "id": 0, name: "現金", "type": -1
             }]),
-            expense_db: TAFFY([
+            expense_db: TAFFY([ /* 費目リスト */
                 { id: 0, name: "食費", inout: -1, breakdown: null },
                 { id: 1, name: "酒・たばこ", inout: -1, breakdown: null },
                 { id: 2, name: "生活用品", inout: -1, breakdown: null },
@@ -72,13 +84,22 @@ spa.model = (function () {
         accounts, expenseset, ledger,
         initModule;
 
-    makeProducts = function (expense_id, breakdown_id) {
+    makeProducts = function (expense_id, breakdown_id, products) {
         /* 品名dbを作る */
-        return TAFFY([{ id: 99, name: "その他" }]);
+        var items = [],
+            p = products({ exp_id: expense_id, brk_id: breakdown_id }).first();
+        if (p) {
+            for (var i = 0, l = p.items.length; i < l; ++i) {
+                items.push({ id: i, name: p.items[i] });
+            }
+        }
+        items.push({ id: 99, name: "その他" });
+        return TAFFY(items);
     };
 
     makeExpenseSetDefault = function () {
         var expense_db = stateMap.expense_db,
+            products = TAFFY(configMap.products),
             breakdowns = TAFFY(configMap.breakdowns),
             items, item_array;
         /* デフォルトの内訳項目を作る */
@@ -87,10 +108,10 @@ spa.model = (function () {
             item_array = brkdwn.items;
             if (item_array !== undefined) {
                 for (var i = 0, l = item_array.length; i < l; ++i) {
-                    items.push({ id: i, name: item_array[i], product: makeProducts(brkdwn.id, i) });
+                    items.push({ id: i, name: item_array[i], product: makeProducts(brkdwn.id, i, products) });
                 }
             }
-            items.push({ id: 99, name: "その他", product: makeProducts(brkdwn.id, 99) });
+            items.push({ id: 99, name: "その他", product: makeProducts(brkdwn.id, 99, products) });
             stateMap.expense_db({ id: brkdwn.id }).first().breakdown = TAFFY(items);
         });
     };
