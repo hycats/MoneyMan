@@ -217,17 +217,27 @@ spa.paneltop = (function () {
             stateMap.curbreakdown_id = breakdown_db().first().id;
             w2ui.form_top.set('top_form_breakdown', { options: { items: items } });
             w2ui.form_top.record.top_form_breakdown = items[0];
+
+            if (configMap.expenseset_model.is_accounts_enable(stateMap.curexpense_id)) {
+                /* 口座が有効ならば内訳の代わりに口座を表示する */
+                $('#top_form_breakdown_id').hide();
+                $('#top_form_accounts_id').show();
+                /* 口座の先頭を選択 */
+                var accounts_db = configMap.accounts_model.get_db();
+                var acc = accounts_db().first();
+                stateMap.curbreakdown_id = acc.id;
+                w2ui.form_top.record.top_form_accounts = { id: acc.id, text: ("00" + acc.id).substr(-2) + ':' + acc.name };
+            }
+            else {
+                /* 口座は隠して、内訳を表示する */
+                $('#top_form_breakdown_id').show();
+                $('#top_form_accounts_id').hide();
+            }
         }
         else {
             stateMap.curbreakdown_id = -1;
             w2ui.form_top.set('top_form_breakdown', { options: { items: [] } });
             w2ui.form_top.record.top_form_breakdown = null;
-        }
-
-        //TODO
-        if (stateMap.curexpense_id == 17) {
-            $('#top_form_breakdown_id').hide();
-            $('#top_form_accounts_id').show();
         }
 
         /* curbreakdown_id も変わったので、品名も更新する */
@@ -302,6 +312,7 @@ spa.paneltop = (function () {
         (function () {
             jqueryMap.$accountsel.w2field('list').change(function (e) {
                 stateMap.curacc_id = $(this).data('selected').id;
+                // TODO: 口座が現金の場合は費目を口座引出しと口座預入に変更する
             });
             onAccountsChange();
         }());

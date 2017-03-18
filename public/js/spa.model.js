@@ -26,7 +26,9 @@ spa.model = (function () {
             { id: 13, items: ["電話代", "TV受信料", "ケーブルTV", "プロバイダ料", "はがき・切手", "携帯電話", "宅急便"] },
             { id: 14, items: ["医薬品", "治療費"] },
             { id: 15, items: ["消費税", "所得税", "住民税", "固定資産税", "都市計画税"] },
-            { id: 16, items: ["美容室", "美容用品"] }
+            { id: 16, items: ["美容室", "美容用品"] },
+            { id: 17, items: [] },
+            { id: 82, items: [] }
         ]
     },
         stateMap = {
@@ -137,9 +139,17 @@ spa.model = (function () {
     expenseset = {
         get_expense_db: function () { return stateMap.expense_db; },
         get_breakdown_db: function (expense_id) { return stateMap.expense_db({ id: expense_id }).first().breakdown; },
+        is_accounts_enable: function (expense_id) {
+            return stateMap.expense_db({ id: expense_id }).first().name2 !== undefined;
+        },
         get_product_db: function (expense_id, breakdown_id) {
             if (expense_id < 0 || breakdown_id < 0) return null;
-            return stateMap.expense_db({ id: expense_id }).first().breakdown({ id: breakdown_id }).first().product;
+            if (this.is_accounts_enable(expense_id)) {
+                return stateMap.expense_db({ id: expense_id }).first().breakdown().first().product;
+            }
+            else {
+                return stateMap.expense_db({ id: expense_id }).first().breakdown({ id: breakdown_id }).first().product;
+            }
         }
     }
 
