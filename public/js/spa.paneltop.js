@@ -112,7 +112,7 @@ spa.paneltop = (function () {
                 save: function () {
                     if (this.validate().length == 0) {
                         //console.log(this.record);
-                        console.log( stateMap.curdate + ' ' + stateMap.curacc_id + ' ' + stateMap.curexpense_id + ' ' + stateMap.curbreakdown_id + ' ' + stateMap.curproduct_id + ' ' + this.record['top_form_money']);
+                        console.log(stateMap.curdate + ' ' + stateMap.curacc_id + ' ' + stateMap.curexpense_id + ' ' + stateMap.curbreakdown_id + ' ' + stateMap.curproduct_id + ' ' + this.record['top_form_money']);
                     }
                 }
             },
@@ -142,14 +142,14 @@ spa.paneltop = (function () {
                     }
                 }
             },
-            onRefresh: function(event) {
+            onRefresh: function (event) {
                 /* 金額入力でEnterキー入力を対応する */
-                event.onComplete = function() {                    
+                event.onComplete = function () {
                     var field = w2ui.form_top.get('top_form_money');
-                    if ( field.el === undefined ) return;
+                    if (field.el === undefined) return;
                     $(field.el).off('keyup');   /* 多重登録防止 */
-                    $(field.el).on('keyup', function(e) {
-                        if ( e.key == 'Enter' ) {
+                    $(field.el).on('keyup', function (e) {
+                        if (e.key == 'Enter') {
                             w2ui.form_top.action('save');
                         }
                     });
@@ -167,7 +167,7 @@ spa.paneltop = (function () {
             curproduct_id: -1   /* 選択中の品名 */
         },
         jqueryMap = {},
-        setJqueryMap, updateDate, applyCurdate, applyCurBreakdown, applyCurExpense, refresh,
+        setJqueryMap, updateDate, applyCurdate, applyCurBreakdown, applyCurExpense, applyCurAccount, refresh,
         onAccountsChange,
         configModule, initModule;
 
@@ -204,10 +204,11 @@ spa.paneltop = (function () {
         var items = [],
             product_db = configMap.expenseset_model.get_product_db(stateMap.curexpense_id, stateMap.curbreakdown_id);
         if (product_db !== undefined && product_db !== null) {
+            stateMap.curproduct_id = product_db().first().id;
+
             product_db().each(function (prd, idx) {
                 items.push({ id: prd.id, text: ("00" + prd.id).substr(-2) + ':' + prd.name });
             });
-            stateMap.curproduct_id = product_db().first().id;
             w2ui.form_top.set('top_form_product', { options: { items: items } });
             w2ui.form_top.record.top_form_product = items[0];
         }
@@ -215,6 +216,7 @@ spa.paneltop = (function () {
             stateMap.curproduct_id = -1;
             w2ui.form_top.set('top_form_product', { options: { items: [] } });
             w2ui.form_top.record.top_form_product = null;
+            alert('applyCurBreakdown');
         }
     };
 
@@ -225,10 +227,12 @@ spa.paneltop = (function () {
         //var expense_db = configMap.expenseset_model.get_expense_db();
         //var breakdown_db = expense_db({ id: stateMap.curexpense_id }).first().breakdown;
         if (breakdown_db !== undefined && breakdown_db !== null) {
+
+            stateMap.curbreakdown_id = breakdown_db().first().id;
+
             breakdown_db().each(function (exp, idx) {
                 items.push({ id: exp.id, text: ("00" + exp.id).substr(-2) + ':' + exp.name });
             });
-            stateMap.curbreakdown_id = breakdown_db().first().id;
             w2ui.form_top.set('top_form_breakdown', { options: { items: items } });
             w2ui.form_top.record.top_form_breakdown = items[0];
 
@@ -252,10 +256,40 @@ spa.paneltop = (function () {
             stateMap.curbreakdown_id = -1;
             w2ui.form_top.set('top_form_breakdown', { options: { items: [] } });
             w2ui.form_top.record.top_form_breakdown = null;
+            alert('applyCurExpense');
         }
 
         /* curbreakdown_id も変わったので、品名も更新する */
         applyCurBreakdown();
+    };
+
+    applyCurAccount = function () {
+        /* curacc_id が変化したら form の費目の口座引出、口座預入を切り替える */
+        var items = [], cur_index = 0, need_exp = false;
+        var expense_db = configMap.expenseset_model.get_expense_db();
+
+        if (stateMap.curexpense_id < 0) {
+            /* 最初の起動時のみ費目には現金を選択する */
+            stateMap.curexpense_id = expense_db().first().id;
+            need_exp = true;
+        }
+
+        expense_db().each(function (exp, idx) {
+            var name = (stateMap.curacc_id == 0 && exp.name2 !== undefined) ? exp.name2 : exp.name;
+            items.push({ id: exp.id, text: ("00" + exp.id).substr(-2) + ':' + name });
+            if (exp.id == stateMap.curexpense_id) {
+                cur_index = items.length - 1;
+            }
+        });
+
+        w2ui.form_top.set('top_form_expense', { options: { items: items } });
+        w2ui.form_top.record.top_form_expense = items[cur_index];
+        //w2ui.form_top.refresh('top_form_expense');
+
+        //$('#top_form_accounts_id').hide(); /* このタイミングだと効かないっぽいので cssで消す */
+        if (need_exp) {
+            applyCurExpense();
+        }
     };
 
     refresh = function () {
@@ -281,7 +315,9 @@ spa.paneltop = (function () {
         w2ui.form_top.set('top_form_accounts', { options: { items: items2 } });
         w2ui.form_top.record.top_form_accounts = items2[0];
         stateMap.curbreakdown_id = items2[0].id;    /* form の口座は breakdown扱い */
-        applyCurBreakdown();
+
+        applyCurAccount();
+        //applyCurBreakdown();  /* ←はappluCurAccount()から呼ばれることになるので不要 */
     };
 
     configModule = function (input_map) {
@@ -326,27 +362,13 @@ spa.paneltop = (function () {
         (function () {
             jqueryMap.$accountsel.w2field('list').change(function (e) {
                 stateMap.curacc_id = $(this).data('selected').id;
-                // TODO: 口座が現金の場合は費目を口座引出しと口座預入に変更する
+                applyCurAccount();
             });
-            onAccountsChange();
+            //onAccountsChange();
         }());
 
-        // 費目
-        (function () {
-            var items = [];
-            var expense_db = configMap.expenseset_model.get_expense_db();
-            expense_db().each(function (exp, idx) {
-                items.push({ id: exp.id, text: ("00" + exp.id).substr(-2) + ':' + exp.name });
-            });
-
-            stateMap.curexpense_id = expense_db().first().id;
-
-            w2ui.form_top.set('top_form_expense', { options: { items: items } });
-            //w2ui.form_top.refresh('top_form_expense');
-
-            //$('#top_form_accounts_id').hide(); /* このタイミングだと効かないっぽいので cssで消す */
-            applyCurExpense();
-        }());
+        /* formの費目以下を初期設定する */
+        onAccountsChange();
 
         // イベント登録
         $.gevent.subscribe($container, 'spa-accountschange', onAccountsChange);
