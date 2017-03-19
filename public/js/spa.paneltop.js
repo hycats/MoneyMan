@@ -140,6 +140,19 @@ spa.paneltop = (function () {
                         //console.log(event);
                     }
                 }
+            },
+            onRefresh: function(event) {
+                /* 金額入力でEnterキー入力を対応する */
+                event.onComplete = function() {                    
+                    var field = w2ui.form_top.get('top_form_money');
+                    if ( field.el === undefined ) return;
+                    $(field.el).off('keyup');   /* 多重登録防止 */
+                    $(field.el).on('keyup', function(e) {
+                        if ( e.key == 'Enter' ) {
+                            w2ui.form_top.action('save');
+                        }
+                    });
+                };
             }
         }
     },
