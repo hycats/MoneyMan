@@ -111,7 +111,8 @@ spa.paneltop = (function () {
             actions: {
                 save: function () {
                     if (this.validate().length == 0) {
-                        console.log(this.record);
+                        //console.log(this.record);
+                        console.log( stateMap.curdate + ' ' + stateMap.curacc_id + ' ' + stateMap.curexpense_id + ' ' + stateMap.curbreakdown_id + ' ' + stateMap.curproduct_id + ' ' + this.record['top_form_money']);
                     }
                 }
             },
@@ -206,7 +207,7 @@ spa.paneltop = (function () {
             product_db().each(function (prd, idx) {
                 items.push({ id: prd.id, text: ("00" + prd.id).substr(-2) + ':' + prd.name });
             });
-            stateMap.curproduct_id = product_db().first.id;
+            stateMap.curproduct_id = product_db().first().id;
             w2ui.form_top.set('top_form_product', { options: { items: items } });
             w2ui.form_top.record.top_form_product = items[0];
         }
