@@ -16,10 +16,12 @@ spa.paneltop = (function () {
 
         settable_map: {
             accounts_model: true,
-            expenseset_model: true
+            expenseset_model: true,
+            booking_model: true,
         },
         accounts_model: null,
         expenseset_model: null,
+        booking_model: null,
 
         layout_top: {
             name: 'layout_top',
@@ -111,8 +113,16 @@ spa.paneltop = (function () {
             actions: {
                 save: function () {
                     if (this.validate().length == 0) {
+                        var entry = {
+                            date: stateMap.curdate,
+                            expense: stateMap.curexpense_id,
+                            breakdown: stateMap.curbreakdown_id,
+                            product: stateMap.curproduct_id,
+                            money: this.record['top_form_money']
+                        };
+                        configMap.booking_model.entry(entry);
                         //console.log(this.record);
-                        console.log(stateMap.curdate + ' ' + stateMap.curacc_id + ' ' + stateMap.curexpense_id + ' ' + stateMap.curbreakdown_id + ' ' + stateMap.curproduct_id + ' ' + this.record['top_form_money']);
+                        //console.log(stateMap.curdate + ' ' + stateMap.curacc_id + ' ' + stateMap.curexpense_id + ' ' + stateMap.curbreakdown_id + ' ' + stateMap.curproduct_id + ' ' + this.record['top_form_money']);
                     }
                 }
             },

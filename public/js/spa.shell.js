@@ -50,7 +50,8 @@ spa.shell = (function () {
 
         spa.paneltop.configModule({
             accounts_model: spa.model.accounts,
-            expenseset_model: spa.model.expenseset
+            expenseset_model: spa.model.expenseset,
+            booking_model: spa.model.booking
         });
         spa.paneltop.initModule(jqueryMap.$container.find('#tab-panel-top'));
         spa.panelkakeibo.initModule(jqueryMap.$container.find('#tab-panel-kakeibo'));

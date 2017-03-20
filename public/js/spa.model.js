@@ -81,7 +81,7 @@ spa.model = (function () {
         isFakeData = true,
         makeProducts, makeExpenseSetDefault,
         accountProto, makeAccount, entryProto, makeEntry,
-        accounts, expenseset, ledger,
+        accounts, expenseset, ledger, booking,
         initModule;
 
     makeProducts = function (expense_id, breakdown_id, products) {
@@ -178,6 +178,17 @@ spa.model = (function () {
         get_db: function () { return stateMap.ledger_db; }
     };
 
+    /* 家計簿入力 */
+    booking = (function () {
+        var entry;
+
+        entry = function (entry_map) {
+            console.log( entry_map.date + ' ' + entry_map.money );
+        };
+
+        return { entry: entry };
+    }());
+
     initModule = function () {
         var account_list, account_map, ledger_list, entry_map;
 
@@ -202,7 +213,8 @@ spa.model = (function () {
         initModule: initModule,
         accounts: accounts,
         expenseset: expenseset,
-        ledger: ledger
+        ledger: ledger,
+        booking: booking
     };
 }());
 
