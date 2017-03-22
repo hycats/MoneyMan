@@ -3,11 +3,11 @@ td.w2ui-head {
 }
 
 .w2field.dt {
-    width: 70px;
+    width: 100px;
 }
 .w2field.ac {
     width: 100px;
-    height: 20px;
+    height: 25px;
 }
 
 .fontawesome {
@@ -38,7 +38,7 @@ td.w2ui-head {
     margin-left:40px;
 }
 .w2ui-field.dt {
-    width: 70px;
+    width: 100px;
 }
 .w2ui-field.txt {
     width: 130px;
