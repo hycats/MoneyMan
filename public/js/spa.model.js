@@ -183,7 +183,10 @@ spa.model = (function () {
         var entry;
 
         entry = function (entry_map) {
+            var entry;
+
             console.log( entry_map.account + ':' + entry_map.date + ' ' + entry_map.money );
+
         };
 
         return { entry: entry };
@@ -202,7 +205,7 @@ spa.model = (function () {
             }
 
             ledger_list = spa.fake.getLedgerList();
-            for (var i = 0, l = ledger.length; i < l; i++) {
+            for (var i = 0, l = ledger_list.length; i < l; i++) {
                 entry_map = ledger_list[i];
                 makeEntry(entry_map);
             }

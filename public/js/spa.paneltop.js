@@ -18,10 +18,12 @@ spa.paneltop = (function () {
             accounts_model: true,
             expenseset_model: true,
             booking_model: true,
+            ledger_model: true
         },
         accounts_model: null,
         expenseset_model: null,
         booking_model: null,
+        ledger_model: null,
 
         layout_top: {
             name: 'layout_top',
@@ -180,6 +182,7 @@ spa.paneltop = (function () {
         jqueryMap = {},
         setJqueryMap, updateDate, applyCurdate, applyCurBreakdown, applyCurExpense, applyCurAccount, refresh,
         onAccountsChange,
+        onLedgerChange,
         configModule, initModule;
 
     setJqueryMap = function () {
@@ -308,7 +311,7 @@ spa.paneltop = (function () {
     };
 
     /* 口座リストが変化した場合に呼ばれるべきハンドラ */
-    onAccountsChange = function () {
+    onAccountsChange = function (event) {
         // 口座リストの取得
         var items = [], items2 = [];
         var accounts_db = configMap.accounts_model.get_db();
@@ -329,6 +332,16 @@ spa.paneltop = (function () {
 
         applyCurAccount();
         //applyCurBreakdown();  /* ←はappluCurAccount()から呼ばれることになるので不要 */
+    };
+
+    /* 台帳が更新された時に呼ばれるハンドラ */
+    onLedgerChange = function (event) {
+        var ledger_db = configMap.ledger_model.get_db(),
+            records = [];
+        ledger_db().each(function (ledger, idx) {
+            records.push( ledger );
+        });
+        w2ui.grid_top.records = records;
     };
 
     configModule = function (input_map) {
@@ -380,9 +393,12 @@ spa.paneltop = (function () {
 
         /* formの費目以下を初期設定する */
         onAccountsChange();
+        /* grid の中身を表示 */
+        onLedgerChange();
 
         // イベント登録
         $.gevent.subscribe($container, 'spa-accountschange', onAccountsChange);
+        $.gevent.subscribe($container, 'spa-ledgerchange', onLedgerChange);
     };
 
     return {
