@@ -183,7 +183,7 @@ spa.model = (function () {
         var entry;
 
         entry = function (entry_map) {
-            console.log( entry_map.date + ' ' + entry_map.money );
+            console.log( entry_map.account + ':' + entry_map.date + ' ' + entry_map.money );
         };
 
         return { entry: entry };

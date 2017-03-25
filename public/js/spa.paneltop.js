@@ -114,6 +114,7 @@ spa.paneltop = (function () {
                 save: function () {
                     if (this.validate().length == 0) {
                         var entry = {
+                            account: stateMap.curacc_id,
                             date: stateMap.curdate,
                             expense: stateMap.curexpense_id,
                             breakdown: stateMap.curbreakdown_id,
