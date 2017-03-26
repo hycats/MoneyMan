@@ -334,6 +334,7 @@ spa.paneltop = (function () {
         //applyCurBreakdown();  /* ←はappluCurAccount()から呼ばれることになるので不要 */
     };
 
+    /* grid 用にentryを変換する */
     entry2field = function (entry) {
         var field = {};
 
