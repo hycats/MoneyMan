@@ -182,7 +182,7 @@ spa.paneltop = (function () {
         jqueryMap = {},
         setJqueryMap, updateDate, applyCurdate, applyCurBreakdown, applyCurExpense, applyCurAccount, refresh,
         onAccountsChange,
-        onLedgerChange,
+        ledger2field, onLedgerChange,
         configModule, initModule;
 
     setJqueryMap = function () {
@@ -334,13 +334,30 @@ spa.paneltop = (function () {
         //applyCurBreakdown();  /* ←はappluCurAccount()から呼ばれることになるので不要 */
     };
 
+    ledger2field = function (ledger) {
+        var field = {};
+
+        field.recid = ledger.recid;
+        field.sdate = ledger.sdate;
+        field.expense = ledger.get_expense_str();
+        field.breakdown = ledger.get_breakdown_str();
+        field.product = ledger.get_product_str();
+        field.check = ledger.check;
+        field.income = ledger.income;
+        field.outgo = ledger.outgo;
+        field.balance = ledger.balance;
+        field.remark = ledger.remark;
+        return field;
+    };
+
     /* 台帳が更新された時に呼ばれるハンドラ */
     onLedgerChange = function (event) {
         var ledger_db = configMap.ledger_model.get_db(),
             records = [];
         ledger_db().each(function (ledger, idx) {
-            records.push( ledger );
+            records.push(ledger2field(ledger));
         });
+        /* grid を埋める */
         w2ui.grid_top.records = records;
     };
 

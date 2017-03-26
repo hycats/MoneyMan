@@ -132,7 +132,20 @@ spa.model = (function () {
     };
 
     entryProto = {
-
+        get_expense_str: function () {
+            return expenseset.get_expense_db()({ id: this.expense }).first().name;
+        },
+        get_breakdown_str: function () {
+            return expenseset.get_breakdown_db(this.expense)({ id: this.breakdown }).first().name;
+        },
+        get_product_str: function () {
+            if ($.type(this.product) === 'number') {
+                return expenseset.get_product_db(this.expense, this.breakdown)({ id: this.product }).first().name;
+            }
+            else {
+                return this.product;
+            }
+        }
     };
 
     makeEntry = function (entry_map) {
@@ -185,7 +198,7 @@ spa.model = (function () {
         entry = function (entry_map) {
             var entry;
 
-            console.log( entry_map.account + ':' + entry_map.date + ' ' + entry_map.money );
+            console.log(entry_map.account + ':' + entry_map.date + ' ' + entry_map.money);
 
         };
 
