@@ -344,8 +344,8 @@ spa.paneltop = (function () {
         field.breakdown = entry.get_breakdown_str();
         field.product = entry.get_product_str();
         field.check = entry.check;
-        field.income = entry.income;
-        field.outgo = entry.outgo;
+        field.income = entry.get_income();
+        field.outgo = entry.get_outgo();
         field.balance = entry.balance;
         field.remark = entry.remark;
         return field;

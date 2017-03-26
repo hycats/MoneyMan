@@ -139,12 +139,18 @@ spa.model = (function () {
             return expenseset.get_breakdown_db(this.expense)({ id: this.breakdown }).first().name;
         },
         get_product_str: function () {
-            if ($.type(this.product) === 'number') {
+            if ($.type(this.product) === 'number') {    /* 数字の時は品目ID */
                 return expenseset.get_product_db(this.expense, this.breakdown)({ id: this.product }).first().name;
             }
-            else {
+            else {  /* そうでない時はその時限りの品名 */
                 return this.product;
             }
+        },
+        get_income : function() {
+            return ( this.cost < 0 ) ? -this.cost : undefined;
+        },
+        get_outgo : function() {
+            return ( this.cost >= 0 ) ? this.cost : undefined;
         }
     };
 
@@ -158,8 +164,8 @@ spa.model = (function () {
         entry.breakdown = entry_map.breakdown;
         entry.product = entry_map.product;
         entry.check = entry_map.check;
-        entry.income = entry_map.income;
-        entry.outgo = entry_map.outgo;
+        //entry.income = entry_map.income;
+        entry.cost = entry_map.cost;
         entry.remark = entry_map.remark;
 
         stateMap.ledger_db.insert(entry);
