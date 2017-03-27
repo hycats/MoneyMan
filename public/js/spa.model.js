@@ -80,7 +80,7 @@ spa.model = (function () {
         },
         isFakeData = true,
         makeProducts, makeExpenseSetDefault,
-        accountProto, makeAccount, entryProto, makeEntry,
+        accountProto, makeAccount, entryProto,
         accounts, expenseset, ledger, booking,
         initModule;
 
@@ -126,6 +126,7 @@ spa.model = (function () {
         acc.id = account_map.id;
         acc.name = account_map.name;
         acc.type = account_map.type;
+        acc.initial_money = account_map.initial_money;
 
         stateMap.account_db.insert(acc);
         return acc;
@@ -146,30 +147,12 @@ spa.model = (function () {
                 return this.product;
             }
         },
-        get_income : function() {
-            return ( this.cost < 0 ) ? -this.cost : undefined;
+        get_income: function () {
+            return (this.cost < 0) ? -this.cost : undefined;
         },
-        get_outgo : function() {
-            return ( this.cost >= 0 ) ? this.cost : undefined;
+        get_outgo: function () {
+            return (this.cost >= 0) ? this.cost : undefined;
         }
-    };
-
-    makeEntry = function (entry_map) {
-        var entry;
-
-        entry = Object.create(entryProto);
-        entry.recid = entry_map.recid;
-        entry.sdate = entry_map.sdate;
-        entry.expense = entry_map.expense;
-        entry.breakdown = entry_map.breakdown;
-        entry.product = entry_map.product;
-        entry.check = entry_map.check;
-        //entry.income = entry_map.income;
-        entry.cost = entry_map.cost;
-        entry.remark = entry_map.remark;
-
-        stateMap.ledger_db.insert(entry);
-        return entry;
     };
 
     accounts = {
@@ -199,16 +182,56 @@ spa.model = (function () {
 
     /* 家計簿入力 */
     booking = (function () {
-        var entry;
+        var count = 0,
+            makeEntry, entry;
 
-        entry = function (entry_map) {
+        makeEntry = function (entry_map) {
             var entry;
 
-            console.log(entry_map.account + ':' + entry_map.date + ' ' + entry_map.money);
+            entry = Object.create(entryProto);
+            entry.recid = count++;
+            entry.account = entry_map.account;
+            entry.sdate = entry_map.sdate;
+            entry.expense = entry_map.expense;
+            entry.breakdown = entry_map.breakdown;
+            entry.product = entry_map.product;
+            entry.check = entry_map.check;
+            //entry.income = entry_map.income;
+            entry.cost = entry_map.cost;
+            entry.remark = entry_map.remark;
 
+            stateMap.ledger_db.insert(entry);
+            console.log(entry);
+            return entry;
         };
 
-        return { entry: entry };
+        entry = function (entry_map) {
+            var entry = {},
+                inout = expenseset.get_expense_db()({ id: entry_map.expense }).first().inout;
+
+            entry.account = entry_map.account;
+            entry.sdate = entry_map.date;
+            entry.expense = entry_map.expense;
+            entry.breakdown = entry_map.breakdown;
+            entry.product = entry_map.product;
+            if (inout < 0) {
+                entry.cost = entry_map.money;
+            }
+            else if (inout > 0) {
+                entry.cost = -entry_map.money;
+            }
+            else { /* 残高調整 */
+                // TODO
+                //entry.cost = balance - entry_map.money;
+            }
+            makeEntry(entry);
+            // TODO grid 更新
+        };
+
+        return {
+            makeEntry: makeEntry,
+            entry: entry
+        };
     }());
 
     initModule = function () {
@@ -226,7 +249,7 @@ spa.model = (function () {
             ledger_list = spa.fake.getLedgerList();
             for (var i = 0, l = ledger_list.length; i < l; i++) {
                 entry_map = ledger_list[i];
-                makeEntry(entry_map);
+                booking.makeEntry(entry_map);
             }
         }
     };

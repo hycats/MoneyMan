@@ -117,7 +117,7 @@ spa.paneltop = (function () {
                     if (this.validate().length == 0) {
                         var entry = {
                             account: stateMap.curacc_id,
-                            date: stateMap.curdate,
+                            date: stateMap.curdate.toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" }),
                             expense: stateMap.curexpense_id,
                             breakdown: stateMap.curbreakdown_id,
                             product: stateMap.curproduct_id,
