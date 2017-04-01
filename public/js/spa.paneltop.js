@@ -360,6 +360,7 @@ spa.paneltop = (function () {
         });
         /* grid を埋める */
         w2ui.grid_top.records = records;
+        w2ui.grid_top.refresh();
     };
 
     configModule = function (input_map) {

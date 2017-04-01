@@ -201,7 +201,7 @@ spa.model = (function () {
             entry.remark = entry_map.remark;
 
             stateMap.ledger_db.insert(entry);
-            console.log(entry);
+            //console.log(entry);
             return entry;
         };
 
@@ -225,7 +225,8 @@ spa.model = (function () {
                 //entry.cost = balance - entry_map.money;
             }
             makeEntry(entry);
-            // TODO grid 更新
+            // grid 更新
+            $.gevent.publish('spa-ledgerchange');
         };
 
         return {
